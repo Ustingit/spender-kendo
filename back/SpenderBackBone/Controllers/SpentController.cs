@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SpenderBackBone.Data.Dtos;
+using SpenderBackBone.SpenderContext;
 
 namespace SpenderBackBone.Controllers
 {
@@ -79,17 +81,79 @@ namespace SpenderBackBone.Controllers
         };
 
 		private readonly ILogger<SpentController> _logger;
+		private readonly SpendContext _context;
 
 		public SpentController(ILogger<SpentController> logger)
 		{
 			_logger = logger;
+			_context = new SpendContext();
 		}
 
         [Route("get")]
         [HttpGet]
-		public IEnumerable<SpentViewModel> Get()
+		public async Task<IEnumerable<SpentViewModel>> Get()
 		{
-			return Spents;
+			var items = (await _context.Spends.Include(x => x.Type).Include(x => x.SubType).ToListAsync()).Select(x => new SpentViewModel()
+			{
+                Id = x.Id,
+                Amount = x.Amount,
+                Date = x.Date,
+                IsChanged = false,
+                IsFrequent = false,
+                SubTypeName = x.SubType?.Name ?? string.Empty,
+                UserId = x.UserId,
+                TypeName = x.Type.Name,
+                SubType = x.SubTypeId
+			});
+
+			return items;
 		}
-	}
+
+        [Route("create")]
+        [HttpPost]
+		public async Task<SpentViewModel> Create(SpentViewModel newSpent)
+		{
+			var maxExistId = Spents.Max(x => x.Id);
+
+			newSpent.Id = maxExistId + 1;
+            Spents.Add(newSpent);
+
+            return newSpent;
+		}
+
+		[Route("edit")]
+		[HttpPost]
+		public async Task<IActionResult> Edit(SpentViewModel spentToEdit)
+		{
+			var spent = Spents.FirstOrDefault(x => x.Id == spentToEdit.Id);
+
+			if (spent == null)
+			{
+				return NotFound(spentToEdit.Id);
+			}
+
+			spent.Amount = spentToEdit.Amount;
+			spent.TypeId = spentToEdit.TypeId;
+			spent.SubType = spentToEdit.SubType;       
+			spent.Date = spentToEdit.Date;
+
+			return Ok(spent);
+        }
+
+		[Route("delete")]
+		[HttpPost]
+		public async Task<IActionResult> Delete(int id)
+		{
+			var spent = Spents.FirstOrDefault(x => x.Id == id);
+
+			if (spent == null)
+			{
+				return NotFound(id);
+			}
+
+			Spents.Remove(spent);
+
+			return Ok(id);
+		}
+    }
 }

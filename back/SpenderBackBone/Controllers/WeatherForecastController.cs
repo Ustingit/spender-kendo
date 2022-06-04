@@ -30,7 +30,7 @@ namespace SpenderBackBone.Controllers
 		}
 
 		[HttpGet]
-		public IEnumerable<WeatherForecast> Get()
+		public async Task<IEnumerable<WeatherForecast>> Get()
 		{
 			HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
 
