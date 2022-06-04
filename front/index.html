@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <link rel="stylesheet" href="styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="styles/kendo.default.min.css" />
+    <link rel="stylesheet" href="styles/kendo.default.mobile.min.css" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/kendo.all.min.js"></script>
+</head>
+<body>
+<div id="example">
+    <div id="grid"></div>
+
+    <script>
+        var spents = [
+            { 
+                id: 1,
+                                amount: 167.15,
+                                user: 1,
+                                type: 3,
+                                typeName: 'food',
+                                subType: 12,
+                                subTypeName: 'grocery',
+                                date: new Date('2022-06-02T14:07:13.799Z'),
+                                isChanged: false,
+                                isFrequent: true
+             },
+             { 
+                id: 2,
+                                amount: 267.35,
+                                user: 1,
+                                type: 3,
+                                typeName: 'food',
+                                subType: 12,
+                                subTypeName: 'grocery',
+                                date: new Date('2022-06-04T14:07:13.799Z'),
+                                isChanged: false,
+                                isFrequent: false
+             },
+             { 
+                id: 3,
+                                amount: 12.30,
+                                user: 1,
+                                type: 2,
+                                typeName: 'transport',
+                                subType: null,
+                                subTypeName: '',
+                                date: new Date('2022-06-04T14:07:13.799Z'),
+                                isChanged: false,
+                                isFrequent: true
+             },
+             { 
+                id: 4,
+                                amount: 12,
+                                user: 1,
+                                type: 4,
+                                typeName: 'health',
+                                subType: 16,
+                                subTypeName: 'pills',
+                                date: new Date('2022-06-07T14:07:13.799Z'),
+                                isChanged: false,
+                                isFrequent: false
+             },
+             { 
+                id: 5,
+                                amount: 620,
+                                user: 1,
+                                type: 4,
+                                typeName: 'health',
+                                subType: 15,
+                                subTypeName: 'stomatogy',
+                                date: new Date('2022-06-07T14:07:13.799Z'),
+                                isChanged: false,
+                                isFrequent: false
+             },
+        ];
+
+        $(document).ready(function() {
+            $("#grid").kendoGrid({
+                dataSource: {
+                    data: spents,
+                    schema: {
+                        model: {
+                            fields: {
+                                id: { type: 'number' },
+                                amount: { type: 'number' },
+                                user: { type: 'number' },
+                                type: { type: 'number' },
+                                typeName: { type: 'string' },
+                                subType: { type: 'number' },
+                                subTypeName: { type: 'string' },
+                                date: { type: 'date' },
+                                isChanged: { type: 'boolean' },
+                                isFrequent: { type: 'boolean' }
+                            }
+                        }
+                    },
+                    pageSize: 3
+                },
+                height: 550,
+                scrollable: true,
+                sortable: true,
+                filterable: true,
+                pageable: {
+                    input: true,
+                    numeric: false
+                },
+                columns: [
+                    { field: "date", title: "Date", format: "{0:dd-MM-yyyy}", width: "130px" },
+                    { field: "amount", title: "Amount", format: "{0:c}", width: "130px" },
+                    { field: "typeName", title: "Type", width: "130px" },
+                    { field: "isFrequent", title: "Is Frequent Spent", width: "130px" }
+                ]
+            });
+        });
+    </script>
+</div>
+
+
+
+</body>
+</html>
