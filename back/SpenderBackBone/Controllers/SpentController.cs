@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SpenderBackBone.Data.Dtos;
+using SpenderBackBone.Data.Entities;
 using SpenderBackBone.Data.Entities.Spends;
 using SpenderBackBone.SpenderContext;
 
@@ -105,7 +106,8 @@ namespace SpenderBackBone.Controllers
                 UserId = x.UserId,
                 TypeName = x.Type.Name,
                 SubType = x.SubTypeId,
-                Comment = x.Comment
+                Comment = x.Comment,
+                CurrencySign = x.Currency.GetSign()
 			});
 
 			return items;

@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using SpenderBackBone.Data.Entities;
 
 namespace SpenderBackBone.Data.Dtos
 {
@@ -37,5 +38,8 @@ namespace SpenderBackBone.Data.Dtos
 
         [JsonProperty("comment")]
         public string Comment { get; set; }
+
+        [JsonProperty("currencySign")]
+        public string CurrencySign { get; set; }
 	}
 }

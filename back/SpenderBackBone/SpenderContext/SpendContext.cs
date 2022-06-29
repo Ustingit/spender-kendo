@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SpenderBackBone.Data.Entities;
 using SpenderBackBone.Data.Entities.Spends;
 using SpenderBackBone.Data.Entities.Types;
 using SpenderBackBone.Data.Entities.Users;
@@ -37,7 +38,7 @@ namespace SpenderBackBone.SpenderContext
 		{
 			base.OnModelCreating(modelBuilder);
 
-			var user = new User() { Age = 21, Name = "Yuryi", SurName = "Grigorian", Id = 1 };
+			var user = new User() { Age = 21, Name = "Yuryi", SurName = "Grigorian", Id = 1, DefaultCurrency = Currency.Zloty, TelegramId = "@visioner" };
 			modelBuilder.Entity<User>().HasData(user);
 
 			var food = new SpendType() {Name = "food", Id = 1 };
@@ -69,7 +70,9 @@ namespace SpenderBackBone.SpenderContext
                 TypeId = food.Id,
                 SubTypeId = groceryST.Id,
                 Date = DateTime.Now.AddDays(-3),
-                Id = 1
+                Id = 1,
+                Currency = user.DefaultCurrency,
+                Comment = "что-то борщим с вкусняшками"
              },
             new Spent() {
                 Amount = 267.35M,
@@ -77,7 +80,8 @@ namespace SpenderBackBone.SpenderContext
                 TypeId = food.Id,
                 SubTypeId = groceryST.Id,
                 Date = DateTime.Now.AddDays(-3),
-                Id = 2
+                Id = 2,
+                Currency = user.DefaultCurrency,
              },
              new Spent() {
                 Amount = 12.30M,
@@ -85,7 +89,8 @@ namespace SpenderBackBone.SpenderContext
                 TypeId = transport.Id,
                 SubType = null,
                 Date = DateTime.Now.AddDays(-1),
-                Id = 3
+                Id = 3,
+                Currency = user.DefaultCurrency,
              },
              new Spent() {
                 Amount = 12,
@@ -93,7 +98,8 @@ namespace SpenderBackBone.SpenderContext
                 TypeId = health.Id,
                 SubTypeId = pills.Id,
                 Date = DateTime.Now,
-                Id = 4
+                Id = 4,
+                Currency = user.DefaultCurrency,
              },
              new Spent() {
                 Amount = 620,
@@ -101,7 +107,8 @@ namespace SpenderBackBone.SpenderContext
                 TypeId = health.Id,
                 SubTypeId = stomatology.Id,
                 Date = DateTime.Now,
-                Id = 5
+                Id = 5,
+                Currency = user.DefaultCurrency,
              }
 			};
 

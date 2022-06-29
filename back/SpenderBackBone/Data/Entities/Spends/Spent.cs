@@ -34,5 +34,8 @@ namespace SpenderBackBone.Data.Entities.Spends
 		public DateTime Date { get; set; }
 
 		public string Comment { get; set; }
+
+		[Required]
+		public Currency Currency { get; set; }
 	}
 }
