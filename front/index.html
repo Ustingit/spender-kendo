@@ -48,15 +48,26 @@
                     numeric: false
                 },
                 columns: [
-                    { field: "date", title: "Date", format: "{0:dd-MM-yyyy}", width: "130px" },
-                    { field: "amount", title: "Amount", format: "{0:c}", width: "130px" },
-					{ field: "currencySign", title: "Currency", width: "20px" },
-                    { field: "typeName", title: "Type", width: "130px" },
-					{ field: "comment", title: "Comment", width: "100px" },
-                    { field: "isFrequent", title: "Is Frequent Spent", width: "130px" }
+                    { field: "date", title: "Date", format: "{0:dd-MM-yyyy}", width: "70px" },
+                    { field: "amount", title: "Amount", width: "70px", template:"#= amountWithCurrency(data)#" },
+                    { field: "typeName", title: "Type", width: "130px", template: "#= showType(data) #" },
+					{ field: "comment", title: "Comment", width: "180px" },
+                    { field: "isFrequent", title: "Is Frequent Spent", width: "70px" }
                 ]
             });
         });
+		
+		function amountWithCurrency(data){
+				return kendo.toString(data.amount, "###.##") + ' ' + data.currencySign;
+			}
+			
+			function showType(data) {
+				if (data.subTypeName) {
+					return data.typeName + ' (' + data.subTypeName + ')';
+				} else {
+					return data.typeName;
+				}
+			}
     </script>
 </div>
 
