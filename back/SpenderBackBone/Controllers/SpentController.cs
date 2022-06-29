@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SpenderBackBone.Data.Dtos;
+using SpenderBackBone.Data.Entities.Spends;
 using SpenderBackBone.SpenderContext;
 
 namespace SpenderBackBone.Controllers
@@ -103,7 +104,8 @@ namespace SpenderBackBone.Controllers
                 SubTypeName = x.SubType?.Name ?? string.Empty,
                 UserId = x.UserId,
                 TypeName = x.Type.Name,
-                SubType = x.SubTypeId
+                SubType = x.SubTypeId,
+                Comment = x.Comment
 			});
 
 			return items;
@@ -115,8 +117,19 @@ namespace SpenderBackBone.Controllers
 		{
 			var maxExistId = Spents.Max(x => x.Id);
 
-			newSpent.Id = maxExistId + 1;
-            Spents.Add(newSpent);
+            var obj = new Spent()
+            {
+                Id = maxExistId + 1,
+                Date = newSpent.Date,
+                UserId = newSpent.UserId,
+                Comment = newSpent.Comment,
+                Amount = newSpent.Amount,
+                TypeId = newSpent.TypeId,
+                SubTypeId = newSpent.SubType
+            };
+
+            await _context.Spends.AddAsync(obj);
+            await _context.SaveChangesAsync();
 
             return newSpent;
 		}
@@ -125,7 +138,7 @@ namespace SpenderBackBone.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Edit(SpentViewModel spentToEdit)
 		{
-			var spent = Spents.FirstOrDefault(x => x.Id == spentToEdit.Id);
+			var spent = await _context.Spends.FirstOrDefaultAsync(x => x.Id == spentToEdit.Id);
 
 			if (spent == null)
 			{
@@ -134,8 +147,11 @@ namespace SpenderBackBone.Controllers
 
 			spent.Amount = spentToEdit.Amount;
 			spent.TypeId = spentToEdit.TypeId;
-			spent.SubType = spentToEdit.SubType;       
+			spent.SubTypeId = spentToEdit.SubType;       
 			spent.Date = spentToEdit.Date;
+			spent.Comment = spentToEdit.Comment;
+
+            await _context.SaveChangesAsync();
 
 			return Ok(spent);
         }
@@ -144,14 +160,15 @@ namespace SpenderBackBone.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Delete(int id)
 		{
-			var spent = Spents.FirstOrDefault(x => x.Id == id);
+			var spent = await _context.Spends.FirstOrDefaultAsync(x => x.Id == id);
 
 			if (spent == null)
 			{
 				return NotFound(id);
 			}
 
-			Spents.Remove(spent);
+			_context.Spends.Remove(spent);
+			await _context.SaveChangesAsync();
 
 			return Ok(id);
 		}

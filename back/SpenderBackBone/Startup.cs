@@ -37,6 +37,18 @@ namespace SpenderBackBone
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "SpenderBackBone", Version = "v1" });
 			});
+
+			services.AddCors();
+			services.AddCors(options =>
+			{
+				options.AddPolicy(name: "FrontCORS",
+					builder =>
+					{
+						builder.AllowAnyOrigin()
+							.AllowAnyHeader()
+							.AllowAnyMethod();
+					});
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,7 +64,7 @@ namespace SpenderBackBone
 			app.UseHttpsRedirection();
 
 			app.UseRouting();
-
+			app.UseCors("FrontCORS");
 			app.UseAuthentication();
 			app.UseAuthorization();
 

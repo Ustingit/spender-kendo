@@ -34,5 +34,8 @@ namespace SpenderBackBone.Data.Dtos
 
         [JsonProperty("isFrequent")]
         public bool IsFrequent { get; set; }
+
+        [JsonProperty("comment")]
+        public string Comment { get; set; }
 	}
 }
