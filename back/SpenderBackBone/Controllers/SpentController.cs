@@ -18,70 +18,6 @@ namespace SpenderBackBone.Controllers
 	[Route("[controller]")]
 	public class SpentController : ControllerBase
 	{
-		private static readonly List<SpentViewModel> Spents = new List<SpentViewModel>()
-		{
-            new SpentViewModel() {
-                Id = 1,
-                Amount = 167.15M,
-                UserId = 1,
-                TypeId = 3,
-                TypeName = "food",
-                SubType = 12,
-                SubTypeName = "grocery",
-                Date = DateTime.Now.AddDays(-3),
-                IsChanged = false,
-                IsFrequent = true
-             },
-            new SpentViewModel() {
-                Id = 2,
-                Amount = 267.35M,
-                UserId = 1,
-                TypeId = 3,
-                TypeName = "food",
-                SubType = 12,
-                SubTypeName = "grocery",
-                Date = DateTime.Now.AddDays(-3),
-                IsChanged = false,
-                IsFrequent = false
-             },
-             new SpentViewModel() {
-                Id = 3,
-                Amount = 12.30M,
-                UserId = 1,
-                TypeId = 2,
-                TypeName = "transport",
-                SubType = null,
-                SubTypeName = "",
-                Date = DateTime.Now.AddDays(-1),
-                IsChanged = false,
-                IsFrequent = true
-             },
-             new SpentViewModel() {
-                Id = 4,
-                Amount = 12,
-                UserId = 1,
-                TypeId = 4,
-                TypeName = "health",
-                SubType = 16,
-                SubTypeName = "pills",
-                Date = DateTime.Now,
-                IsChanged = false,
-                IsFrequent = false
-             },
-             new SpentViewModel() {
-                Id = 5,
-                Amount = 620,
-                UserId = 1,
-                TypeId = 4,
-                TypeName = "health",
-                SubType = 15,
-                SubTypeName = "stomatology",
-                Date = DateTime.Now,
-                IsChanged = false,
-                IsFrequent = false
-             }
-        };
-
 		private readonly ILogger<SpentController> _logger;
 		private readonly SpendContext _context;
 
@@ -117,7 +53,8 @@ namespace SpenderBackBone.Controllers
         [HttpPost]
 		public async Task<SpentViewModel> Create(SpentViewModel newSpent)
 		{
-			var maxExistId = Spents.Max(x => x.Id);
+			var test = await _context.Spends.MaxAsync(x => x.Id);
+			var maxExistId = (await _context.Spends.OrderByDescending(x => x.Id).Take(1).FirstOrDefaultAsync())?.Id ?? 0;
 
             var obj = new Spent()
             {
@@ -127,7 +64,8 @@ namespace SpenderBackBone.Controllers
                 Comment = newSpent.Comment,
                 Amount = newSpent.Amount,
                 TypeId = newSpent.TypeId,
-                SubTypeId = newSpent.SubType
+                SubTypeId = newSpent.SubType,
+				Currency = CurrencyHelper.GetCurrencyBySign(newSpent.CurrencySign)
             };
 
             await _context.Spends.AddAsync(obj);
@@ -152,8 +90,9 @@ namespace SpenderBackBone.Controllers
 			spent.SubTypeId = spentToEdit.SubType;       
 			spent.Date = spentToEdit.Date;
 			spent.Comment = spentToEdit.Comment;
+			spent.Currency = CurrencyHelper.GetCurrencyBySign(spentToEdit.CurrencySign);
 
-            await _context.SaveChangesAsync();
+			await _context.SaveChangesAsync();
 
 			return Ok(spent);
         }
