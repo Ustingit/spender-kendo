@@ -11,7 +11,7 @@ import TopNavbar from './components/navbars/TopNavbar'
 import SpendsGrid from './components/DataComponents/SpendsGrid';
 
 // alert
-// fetch of data
+//+ fetch of data
 // authorization, simple
 //authorization, modern
 // toasts
@@ -24,6 +24,7 @@ import SpendsGrid from './components/DataComponents/SpendsGrid';
 // type to db income or spend
 // search for concrete spent
 // grouping by date
+//waiter for data spinner
 
 function App() {
   return (

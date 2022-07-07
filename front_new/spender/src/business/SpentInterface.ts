@@ -10,5 +10,6 @@ export default interface ISpent {
     isChanged: 'boolean',
     isFrequent: 'boolean',
 	comment: 'string',
-	currencySign: 'string'
+	currencySign: 'string',
+    direction: 'number'
 }

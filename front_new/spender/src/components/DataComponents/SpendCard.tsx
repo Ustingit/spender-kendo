@@ -18,7 +18,7 @@ export default function SpendCard(props: Props) {
     return (
 <Row>
                  <Col>
-                 <Card style={{ width: '18rem' }}>
+                 <Card style={{ width: '100rem' }}>
       <Card.Body>
         <Card.Title>{props.concreteSpent.amount}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted">{props.concreteSpent.typeName} {props.concreteSpent.subTypeName && props.concreteSpent.subTypeName}</Card.Subtitle>
