@@ -25,6 +25,7 @@ import SpendsGrid from './components/DataComponents/SpendsGrid';
 // search for concrete spent
 // grouping by date
 //waiter for data spinner
+// pages (react-router)
 
 function App() {
   return (

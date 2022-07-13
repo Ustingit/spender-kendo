@@ -19,6 +19,21 @@ export default function SpendsGrid() {
         FetchAllSpends()
     }, [])
 
+    async function deleteSpend(id: number) {
+        console.log('in delete 1');
+        var successful = await new spendsApi().delete(id);
+        
+        if (successful) {
+            const newSpends = spends.filter(x => Number(x.id) !== id);
+            setSpends(newSpends);
+        }
+    } 
+
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        console.log(event.target);
+        console.log(event.currentTarget);
+      };
+
     if (!spends) {
         return <Container><Row>...loading...</Row></Container>
     }
@@ -27,7 +42,7 @@ export default function SpendsGrid() {
         <Container fluid>
         {spends.map((element) => {
         return (
-            <SpendCard concreteSpent={element} key={element.id} />
+            <SpendCard concreteSpent={element} key={element.id} onDelete={deleteSpend} />
         );
       })}
         </Container>
