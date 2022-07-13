@@ -41,5 +41,8 @@ namespace SpenderBackBone.Data.Dtos
 
         [JsonProperty("currencySign")]
         public string CurrencySign { get; set; }
+
+        [JsonProperty("direction")]
+        public int Direction { get; set; }
 	}
 }

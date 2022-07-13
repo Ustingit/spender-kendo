@@ -22,15 +22,15 @@ namespace SpenderBackBone.SpenderContext
 
 		public SpendContext()
 		{
-			Database.EnsureDeleted();
+			//Database.EnsureDeleted();
 			Database.EnsureCreated();
-		}
+        }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			base.OnConfiguring(optionsBuilder);
 
-			optionsBuilder.UseSqlServer(@"Server=.\SQLExpress;;Database=spendsV1;Trusted_Connection=Yes;");
+			optionsBuilder.UseSqlServer(@"Server=.\SQLExpress;;Database=spendsV2;Trusted_Connection=Yes;");
 		}
 
 		//seed only
@@ -41,15 +41,17 @@ namespace SpenderBackBone.SpenderContext
 			var user = new User() { Age = 21, Name = "Yuryi", SurName = "Grigorian", Id = 1, DefaultCurrency = Currency.Zloty, TelegramId = "@visioner" };
 			modelBuilder.Entity<User>().HasData(user);
 
-			var food = new SpendType() {Name = "food", Id = 1 };
-            var transport = new SpendType() { Name = "transport", Id = 2 };
-            var health = new SpendType() { Name = "health", Id = 3 }; 
+			var food = new SpendType() {Name = "food", Id = 1, Direction = Direction.Outcome };
+            var transport = new SpendType() { Name = "transport", Id = 2, Direction = Direction.Outcome };
+            var health = new SpendType() { Name = "health", Id = 3, Direction = Direction.Outcome };
+            var debtReturn = new SpendType() { Name = "debt returns", Id = 4, Direction = Direction.Income };
 
             var types = new List<SpendType>()
             {
 	            food,
 	            transport,
-	            health
+	            health,
+	            debtReturn
             };
 
             modelBuilder.Entity<SpendType>().HasData(types);
@@ -72,7 +74,8 @@ namespace SpenderBackBone.SpenderContext
                 Date = DateTime.Now.AddDays(-3),
                 Id = 1,
                 Currency = user.DefaultCurrency,
-                Comment = "что-то борщим с вкусняшками"
+                Comment = "что-то борщим с вкусняшками",
+                Direction = Direction.Outcome
              },
             new Spent() {
                 Amount = 267.35M,
@@ -82,6 +85,7 @@ namespace SpenderBackBone.SpenderContext
                 Date = DateTime.Now.AddDays(-3),
                 Id = 2,
                 Currency = user.DefaultCurrency,
+                Direction = Direction.Outcome
              },
              new Spent() {
                 Amount = 12.30M,
@@ -91,6 +95,7 @@ namespace SpenderBackBone.SpenderContext
                 Date = DateTime.Now.AddDays(-1),
                 Id = 3,
                 Currency = user.DefaultCurrency,
+                Direction = Direction.Outcome
              },
              new Spent() {
                 Amount = 12,
@@ -109,6 +114,17 @@ namespace SpenderBackBone.SpenderContext
                 Date = DateTime.Now,
                 Id = 5,
                 Currency = user.DefaultCurrency,
+                Direction = Direction.Outcome
+             },
+             new Spent()
+             {
+                 Amount = 200,
+                 UserId = user.Id,
+                 TypeId = debtReturn.Id,
+                 Date = DateTime.Now.AddDays(-10),
+                 Id = 6,
+                 Currency = user.DefaultCurrency,
+                 Direction = debtReturn.Direction
              }
 			};
 

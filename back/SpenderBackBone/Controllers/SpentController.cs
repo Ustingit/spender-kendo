@@ -43,7 +43,8 @@ namespace SpenderBackBone.Controllers
                 TypeName = x.Type.Name,
                 SubType = x.SubTypeId,
                 Comment = x.Comment,
-                CurrencySign = x.Currency.GetSign()
+                CurrencySign = x.Currency.GetSign(),
+				Direction = (int)x.Direction
 			});
 
 			return items;
@@ -53,8 +54,8 @@ namespace SpenderBackBone.Controllers
         [HttpPost]
 		public async Task<SpentViewModel> Create(SpentViewModel newSpent)
 		{
-			var test = await _context.Spends.MaxAsync(x => x.Id);
-			var maxExistId = (await _context.Spends.OrderByDescending(x => x.Id).Take(1).FirstOrDefaultAsync())?.Id ?? 0;
+			var maxExistId = await _context.Spends.MaxAsync(x => x.Id);
+			var test = (await _context.Spends.OrderByDescending(x => x.Id).Take(1).FirstOrDefaultAsync())?.Id ?? 0;
 
             var obj = new Spent()
             {
@@ -65,7 +66,8 @@ namespace SpenderBackBone.Controllers
                 Amount = newSpent.Amount,
                 TypeId = newSpent.TypeId,
                 SubTypeId = newSpent.SubType,
-				Currency = CurrencyHelper.GetCurrencyBySign(newSpent.CurrencySign)
+				Currency = CurrencyHelper.GetCurrencyBySign(newSpent.CurrencySign),
+				Direction = (Direction) newSpent.Direction
             };
 
             await _context.Spends.AddAsync(obj);
@@ -91,6 +93,9 @@ namespace SpenderBackBone.Controllers
 			spent.Date = spentToEdit.Date;
 			spent.Comment = spentToEdit.Comment;
 			spent.Currency = CurrencyHelper.GetCurrencyBySign(spentToEdit.CurrencySign);
+			spent.Direction = (Direction) spentToEdit.Direction;
+
+			_context.Entry(spent).State = EntityState.Modified;
 
 			await _context.SaveChangesAsync();
 
@@ -99,19 +104,19 @@ namespace SpenderBackBone.Controllers
 
 		[Route("delete")]
 		[HttpPost]
-		public async Task<IActionResult> Delete(int id)
+		public async Task<IActionResult> Delete(Entity entity)
 		{
-			var spent = await _context.Spends.FirstOrDefaultAsync(x => x.Id == id);
+			var spent = await _context.Spends.FirstOrDefaultAsync(x => x.Id == entity.ID);
 
 			if (spent == null)
 			{
-				return NotFound(id);
+				return NotFound(entity.ID);
 			}
 
 			_context.Spends.Remove(spent);
 			await _context.SaveChangesAsync();
 
-			return Ok(id);
+			return Ok(entity.ID);
 		}
     }
 }

@@ -37,5 +37,8 @@ namespace SpenderBackBone.Data.Entities.Spends
 
 		[Required]
 		public Currency Currency { get; set; }
+
+		[Required]
+		public Direction Direction { get; set; }
 	}
 }

@@ -14,5 +14,8 @@ namespace SpenderBackBone.Data.Entities.Types
 		[MinLength(3)]
 		[Required]
 		public string Name { get; set; }
+
+		[Required]
+		public Direction Direction { get; set; }
 	}
 }
