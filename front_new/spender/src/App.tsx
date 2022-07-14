@@ -1,5 +1,4 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -13,7 +12,7 @@ import SpendsGrid from './components/DataComponents/SpendsGrid';
 // alert
 //+ fetch of data
 // authorization, simple
-//authorization, modern
+// authorization, modern
 // toasts
 // first report
 // full crud
@@ -22,16 +21,18 @@ import SpendsGrid from './components/DataComponents/SpendsGrid';
 // translations
 // images spend or income
 // type to db income or spend
-// search for concrete spent
+// +search for concrete spent
 // grouping by date
-//waiter for data spinner
+// waiter for data spinner
 // pages (react-router)
 
 function App() {
+  const [searchString, setSearchString] = useState<string>("");
+
   return (
     <Container fluid >
-      <TopNavbar />
-      <SpendsGrid />
+      <TopNavbar onFilterChange={(filterValue) => setSearchString(filterValue)} />
+      <SpendsGrid filterValue={searchString} />
    </Container>
   );
 }

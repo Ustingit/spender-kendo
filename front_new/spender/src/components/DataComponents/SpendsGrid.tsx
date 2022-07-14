@@ -6,8 +6,26 @@ import Col from 'react-bootstrap/Col'
 import ISpent from '../../business/SpentInterface'
 import SpendCard from './SpendCard';
 import spendsApi from '../../api/spendsApi';
+import { isNumeric } from '../../helpers/numberHelper'
 
-export default function SpendsGrid() {
+interface Props {
+    filterValue: string;
+}
+
+function filterValues(items: ISpent[], filter: string) : ISpent[] {
+    if (!filter || !items) {
+        return items;
+    }
+
+    var loweredFilter = filter.toLowerCase();
+    return items.filter(x => (x.comment && x.comment.toLowerCase().includes(loweredFilter))
+        || (x.typeName && x.typeName.toLowerCase().includes(loweredFilter))
+        || (x.subTypeName && x.subTypeName.toLowerCase().includes(loweredFilter))
+        || (x.amount && isNumeric(loweredFilter) && x.amount.toString().includes(loweredFilter))
+    );
+}
+
+export default function SpendsGrid(props: Props) {
     const [spends, setSpends] = useState<ISpent[]>([]);
 
     async function FetchAllSpends() {
@@ -20,7 +38,6 @@ export default function SpendsGrid() {
     }, [])
 
     async function deleteSpend(id: number) {
-        console.log('in delete 1');
         var successful = await new spendsApi().delete(id);
         
         if (successful) {
@@ -38,9 +55,13 @@ export default function SpendsGrid() {
         return <Container><Row>...loading...</Row></Container>
     }
 
+    const itemsToRepresent = props && props.filterValue 
+        ? filterValues(spends, props.filterValue) 
+        : spends;
+
     return (
         <Container fluid>
-        {spends.map((element) => {
+        {itemsToRepresent.map((element) => {
         return (
             <SpendCard concreteSpent={element} key={element.id} onDelete={deleteSpend} />
         );

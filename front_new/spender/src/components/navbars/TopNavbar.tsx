@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import '../../App.css';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -7,7 +7,13 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
-export default function TopNavbar() {
+interface Props {
+  onFilterChange: (filterValue: string) => void
+}
+
+export default function TopNavbar(props: Props) {
+    const [searchValue, setSearchValue] = useState<string>("");
+
     return (
         <Navbar bg="light" expand="lg">
       <Container fluid>
@@ -41,8 +47,9 @@ export default function TopNavbar() {
               placeholder="Search"
               className="me-2"
               aria-label="Search"
+              onChange={(e) => setSearchValue(e.target.value)}
             />
-            <Button variant="outline-success">Search</Button>
+            <Button variant="outline-success" onClick={() => props.onFilterChange(searchValue)} >Search</Button>
           </Form>
         </Navbar.Collapse>
       </Container>

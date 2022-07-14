@@ -4,6 +4,8 @@ import ISpent from '../business/SpentInterface';
 const spendsUrl = 'Spent';
 
 export default class spendsApi {
+    apiUrl = BACK_URL + spendsUrl;
+
     errorHandler: any;
     axios;
 
@@ -14,9 +16,8 @@ export default class spendsApi {
     
     async fetchAll() : Promise<ISpent[]> {
         var that = this.axios;
-        const response = await this.axios.get(BACK_URL + spendsUrl + '/get').catch(function (error: any) {
+        const response = await this.axios.get(this.apiUrl + '/get').catch(function (error: any) {
             console.log(error);
-
             if (that.errorHandler) {
                 that.errorHandler();
             }
@@ -26,11 +27,9 @@ export default class spendsApi {
     }
 
    async delete(id: number) : Promise<boolean> {
-    console.log('in api id: ', id);
     var that = this.axios;
-        await this.axios.post(BACK_URL + spendsUrl + '/delete', {id}).catch(function (error: any) {
+        await this.axios.post(this.apiUrl + '/delete', {id}).catch(function (error: any) {
             console.log(error);
-
             if (that.errorHandler) {
                 that.errorHandler();
             }
