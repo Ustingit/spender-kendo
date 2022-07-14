@@ -39,4 +39,19 @@ export default class spendsApi {
 
         return true;
    }
+
+   async edit(item: ISpent) : Promise<boolean> {
+        var that = this.axios;
+
+        await this.axios.post(this.apiUrl + '/edit', JSON.stringify(item)).catch(function (error: any) {
+            console.log(error);
+            if (that.errorHandler) {
+                that.errorHandler();
+            }
+
+            return false;
+        });
+
+        return true;
+   }
 }

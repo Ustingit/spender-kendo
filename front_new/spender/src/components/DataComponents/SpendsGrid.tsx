@@ -46,6 +46,15 @@ export default function SpendsGrid(props: Props) {
         }
     } 
 
+    async function editSpend(item: ISpent) {
+        var successful = await new spendsApi().edit(item);
+        
+        if (successful) {
+            const newSpends = spends.filter(x => x.id == item.id);
+            setSpends(newSpends);
+        }
+    }
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         console.log(event.target);
         console.log(event.currentTarget);
@@ -63,7 +72,7 @@ export default function SpendsGrid(props: Props) {
         <Container fluid>
         {itemsToRepresent.map((element) => {
         return (
-            <SpendCard concreteSpent={element} key={element.id} onDelete={deleteSpend} />
+            <SpendCard concreteSpent={element} key={element.id} onDelete={deleteSpend} onEdit={editSpend} />
         );
       })}
         </Container>

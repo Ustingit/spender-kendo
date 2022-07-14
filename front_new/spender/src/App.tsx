@@ -20,7 +20,7 @@ import SpendsGrid from './components/DataComponents/SpendsGrid';
 // forms with validations
 // translations
 // images spend or income
-// type to db income or spend
+// +type to db income or spend
 // +search for concrete spent
 // grouping by date
 // waiter for data spinner
