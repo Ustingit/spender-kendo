@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import '../../App.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import ISpent from '../../business/SpentInterface'
 import SpendCard from './SpendCard';
 import spendsApi from '../../api/spendsApi';
@@ -50,7 +49,7 @@ export default function SpendsGrid(props: Props) {
         var successful = await new spendsApi().edit(item);
         
         if (successful) {
-            const newSpends = spends.filter(x => x.id == item.id);
+            const newSpends = spends.filter(x => x.id === item.id);
             setSpends(newSpends);
         }
     }
