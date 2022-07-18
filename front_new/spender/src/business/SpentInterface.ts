@@ -1,8 +1,8 @@
 export default interface ISpent {
     id: number,
     amount: number,
-    user: number,
-    type: number,
+    userId: number,
+    typeId: number,
     typeName: string,
     subType: number,
     subTypeName: string,
@@ -11,5 +11,6 @@ export default interface ISpent {
     isFrequent: boolean,
 	comment: string,
 	currencySign: string,
-    direction: number
+    direction: number,
+    rawDate: string
 }

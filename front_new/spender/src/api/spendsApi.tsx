@@ -42,8 +42,10 @@ export default class spendsApi {
 
    async edit(item: ISpent) : Promise<boolean> {
         var that = this.axios;
-
-        await this.axios.post(this.apiUrl + '/edit', JSON.stringify(item)).catch(function (error: any) {
+        
+        await this.axios.post(this.apiUrl + '/edit', item, {
+            'content-type': 'text/json;charset=utf-8'
+        }).catch(function (error: any) {
             console.log(error);
             if (that.errorHandler) {
                 that.errorHandler();
@@ -54,4 +56,21 @@ export default class spendsApi {
 
         return true;
    }
+
+   async create(item: ISpent) : Promise<boolean> {
+    var that = this.axios;
+
+    await this.axios.post(this.apiUrl + '/create', item, {
+            'content-type': 'text/json;charset=utf-8'
+        }).catch(function (error: any) {
+        console.log(error);
+        if (that.errorHandler) {
+            that.errorHandler();
+        }
+
+        return false;
+    });
+
+    return true;
+}
 }

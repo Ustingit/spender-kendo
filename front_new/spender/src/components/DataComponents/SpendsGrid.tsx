@@ -6,6 +6,7 @@ import ISpent from '../../business/SpentInterface'
 import SpendCard from './SpendCard';
 import spendsApi from '../../api/spendsApi';
 import { isNumeric } from '../../helpers/numberHelper'
+import { updateSpend } from '../../helpers/business/spendsHelper';
 
 interface Props {
     filterValue: string;
@@ -26,6 +27,7 @@ function filterValues(items: ISpent[], filter: string) : ISpent[] {
 
 export default function SpendsGrid(props: Props) {
     const [spends, setSpends] = useState<ISpent[]>([]);
+    const [showEditPopup, setShowEditPopup] = useState<boolean>(false);
 
     async function FetchAllSpends() {
         var spends = await new spendsApi().fetchAll();
@@ -45,19 +47,19 @@ export default function SpendsGrid(props: Props) {
         }
     } 
 
-    async function editSpend(item: ISpent) {
-        var successful = await new spendsApi().edit(item);
+    async function editSpend(item: ISpent, isNew: boolean) {
+        var successful = isNew ? await new spendsApi().create(item) : await new spendsApi().edit(item);
         
         if (successful) {
-            const newSpends = spends.filter(x => x.id === item.id);
+            var newSpends = spends;
+            const index = newSpends.findIndex((obj => obj.id === item.id));
+            newSpends[index] = updateSpend(newSpends[index], item);
+
             setSpends(newSpends);
         }
-    }
 
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        console.log(event.target);
-        console.log(event.currentTarget);
-      };
+        setShowEditPopup(false);
+    }
 
     if (!spends) {
         return <Container><Row>...loading...</Row></Container>
@@ -71,7 +73,7 @@ export default function SpendsGrid(props: Props) {
         <Container fluid>
         {itemsToRepresent.map((element) => {
         return (
-            <SpendCard concreteSpent={element} key={element.id} onDelete={deleteSpend} onEdit={editSpend} />
+            <SpendCard concreteSpent={element} key={element.id} onDelete={deleteSpend} onEdit={editSpend} showPopup={showEditPopup} onSetShowPopup={setShowEditPopup} />
         );
       })}
         </Container>

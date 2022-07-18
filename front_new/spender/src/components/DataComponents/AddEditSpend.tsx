@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import ISpent from '../../business/SpentInterface';
@@ -10,11 +10,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import * as dateFns from "date-fns";
 import { formatAsCommon } from '../../helpers/calendar';
+import { isNumeric } from '../../helpers/numberHelper';
 
 interface Props {
     show: boolean
     onClose: () => void
-    onSave: () => void
+    onSave: (item: ISpent, isNew: boolean) => void
     item?: ISpent
 }
 
@@ -22,7 +23,7 @@ export default function AddEditSpendModal(props: Props) {
     const isNew = props.item === null;
     
     const [editableAmount, setEditableAmount] = useState<number>(props.item?.amount || 0);
-    const [editableType, setEditableType] = useState<number>(props.item?.type || 0);
+    const [editableType, setEditableType] = useState<number>(props.item?.typeId || 0);
     const [editableSubType, setEditableSubType] = useState<number>(props.item?.subType || 0);
     const [editableIsFrequent, setEditableIsFrequent] = useState(props.item?.isFrequent || false);
     const [editableComment, setEditableComment] = useState<string>(props.item?.comment || '');
@@ -32,16 +33,35 @@ export default function AddEditSpendModal(props: Props) {
     );
 
     function onSaveButton() {
-        console.log('SAVING!');
-        console.log(editableAmount);
-        console.log(editableType);
-        console.log(editableSubType);
-        console.log(dateLanded);
-        console.log(editableIsFrequent);
-        console.log(editableComment);
-        console.log(editableDirection);
-        
-        //props.onSave();
+        if (isNew) {
+          console.log('save new', props.item);
+          props.onSave({
+            id: 0,
+            amount: editableAmount,
+            typeId: 0,
+            subType: 0,
+            date: dateLanded,
+            isFrequent: editableIsFrequent,
+            comment: editableComment,
+            currencySign: zlotyCurrencySign,
+            direction: editableDirection,
+            rawDate: formatAsCommon(dateLanded)
+          } as ISpent, true);
+        } else {
+          console.log('save not new', props.item);
+          props.onSave({
+            id: props.item!.id,
+            amount: editableAmount,
+            typeId: props.item!.typeId,
+            subType: props.item!.subType,
+            date: dateLanded,
+            isFrequent: editableIsFrequent,
+            comment: editableComment,
+            currencySign: props.item!.currencySign,
+            direction: props.item!.direction,
+            rawDate: formatAsCommon(dateLanded)
+          } as ISpent, false);
+        }
     }
 
     return (
@@ -50,7 +70,6 @@ export default function AddEditSpendModal(props: Props) {
           <Modal.Title>{props.item ? "Edit spend" : "Create spend"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-
             <div><span>Date: </span>
             <DatePicker
               selected={dateLanded}
@@ -66,7 +85,12 @@ export default function AddEditSpendModal(props: Props) {
 
       <InputGroup className="mb-3">
         <InputGroup.Text  >{props.item ? props.item.currencySign : zlotyCurrencySign}</InputGroup.Text>
-        <Form.Control aria-label="Amount" type="number" placeholder="10.00" value={editableAmount} onChange={(e) => setEditableAmount(e.target.value as unknown as number)} />
+        <Form.Control aria-label="Amount" type="number" placeholder="10.00" value={editableAmount} onChange={(e) => {
+          const stringValue = e.target.value;
+          if (isNumeric(stringValue)) {
+              setEditableAmount(parseFloat(stringValue));
+          }
+        }} />
       </InputGroup>
 
       <FloatingLabel
@@ -78,7 +102,7 @@ export default function AddEditSpendModal(props: Props) {
       </FloatingLabel>
 
       <Form.Group className="mb-3" controlId="formIsFrequentCheckbox">
-        <Form.Check type="checkbox" label="Is frequent ?" value={editableIsFrequent as unknown as string} onChange={(date) => setEditableIsFrequent(date as unknown as boolean)} />
+        <Form.Check type="checkbox" label="Is frequent ?" checked={editableIsFrequent} onChange={(event) => setEditableIsFrequent(event.target.checked)} />
       </Form.Group>
 
             </Modal.Body>

@@ -3,7 +3,7 @@
 // MM/dd/YYYY
 export const formatAsCommon = (rawValue) => {
     const value = new Date(rawValue);
-    var formatted = `${value.getMonth().toString().length === 2 ? value.getMonth() : "0" + (value.getMonth() + 1)}/${value.getDate()}/${value.getFullYear()}`;
+    var formatted = `${value.getMonth().toString().length === 2 ? value.getMonth() : "0" + (value.getMonth() + 1)}/${value.getDate().toString().length === 2 ? value.getDate() : "0" + (value.getDate())}/${value.getFullYear()}`;
     
     return formatted;
 }
