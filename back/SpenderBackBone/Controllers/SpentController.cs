@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using SpenderBackBone.Data.Dtos;
 using SpenderBackBone.Data.Entities;
 using SpenderBackBone.Data.Entities.Spends;
+using SpenderBackBone.Extensions;
 using SpenderBackBone.SpenderContext;
 
 namespace SpenderBackBone.Controllers
@@ -31,6 +33,8 @@ namespace SpenderBackBone.Controllers
         [HttpGet]
 		public async Task<IEnumerable<SpentViewModel>> Get()
 		{
+			var test = await _context.Spends.Where(x => (new Direction[] { Direction.Income, Direction.Outcome }).Contains(x.Direction)).ToArrayAsync();
+
 			var items = (await _context.Spends.Include(x => x.Type).Include(x => x.SubType).ToListAsync()).Select(x => new SpentViewModel()
 			{
                 Id = x.Id,
@@ -40,6 +44,7 @@ namespace SpenderBackBone.Controllers
                 IsFrequent = false,
                 SubTypeName = x.SubType?.Name ?? string.Empty,
                 UserId = x.UserId,
+				TypeId = x.TypeId,
                 TypeName = x.Type.Name,
                 SubType = x.SubTypeId,
                 Comment = x.Comment,
@@ -52,7 +57,7 @@ namespace SpenderBackBone.Controllers
 
         [Route("create")]
         [HttpPost]
-		public async Task<SpentViewModel> Create(SpentViewModel newSpent)
+		public async Task<SpentViewModel> Create([FromBody]SpentViewModel newSpent)
 		{
 			var maxExistId = await _context.Spends.MaxAsync(x => x.Id);
 			var test = (await _context.Spends.OrderByDescending(x => x.Id).Take(1).FirstOrDefaultAsync())?.Id ?? 0;
@@ -60,8 +65,8 @@ namespace SpenderBackBone.Controllers
             var obj = new Spent()
             {
                 Id = maxExistId + 1,
-                Date = newSpent.Date,
-                UserId = newSpent.UserId,
+                Date = DateTime.ParseExact(newSpent.RawDate, "d", CultureInfo.InvariantCulture),
+				UserId = 1,
                 Comment = newSpent.Comment,
                 Amount = newSpent.Amount,
                 TypeId = newSpent.TypeId,
@@ -73,12 +78,12 @@ namespace SpenderBackBone.Controllers
             await _context.Spends.AddAsync(obj);
             await _context.SaveChangesAsync();
 
-            return newSpent;
+            return obj.AsViewModel();
 		}
 
 		[Route("edit")]
 		[HttpPost]
-		public async Task<IActionResult> Edit(SpentViewModel spentToEdit)
+		public async Task<IActionResult> Edit([FromBody] SpentViewModel spentToEdit)
 		{
 			var spent = await _context.Spends.FirstOrDefaultAsync(x => x.Id == spentToEdit.Id);
 
@@ -90,13 +95,12 @@ namespace SpenderBackBone.Controllers
 			spent.Amount = spentToEdit.Amount;
 			spent.TypeId = spentToEdit.TypeId;
 			spent.SubTypeId = spentToEdit.SubType;       
-			spent.Date = spentToEdit.Date;
+			spent.Date = DateTime.ParseExact(spentToEdit.RawDate, "d", CultureInfo.InvariantCulture);
 			spent.Comment = spentToEdit.Comment;
 			spent.Currency = CurrencyHelper.GetCurrencyBySign(spentToEdit.CurrencySign);
 			spent.Direction = (Direction) spentToEdit.Direction;
 
 			_context.Entry(spent).State = EntityState.Modified;
-
 			await _context.SaveChangesAsync();
 
 			return Ok(spent);

@@ -12,10 +12,10 @@ namespace SpenderBackBone.Data.Dtos
         [JsonProperty("amount")]
 		public decimal Amount { get; set; }
         
-        [JsonProperty("user")]
+        [JsonProperty("userId")]
 		public int UserId { get; set; }
 
-        [JsonProperty("type")]
+        [JsonProperty("typeId")]
 		public int TypeId { get; set; }
 
         [JsonProperty("typeName")]
@@ -44,5 +44,8 @@ namespace SpenderBackBone.Data.Dtos
 
         [JsonProperty("direction")]
         public int Direction { get; set; }
+
+        [JsonProperty("rawDate")]
+        public string RawDate { get; set; }
 	}
 }
