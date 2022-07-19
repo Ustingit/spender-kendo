@@ -20,17 +20,27 @@ interface Props {
 }
 
 export default function AddEditSpendModal(props: Props) {
-    const isNew = props.item === null;
+    const isNew = props.item === null || props.item === undefined;
     
     const [editableAmount, setEditableAmount] = useState<number>(props.item?.amount || 0);
-    const [editableType, setEditableType] = useState<number>(props.item?.typeId || 0);
-    const [editableSubType, setEditableSubType] = useState<number>(props.item?.subType || 0);
+    const [editableType, setEditableType] = useState<number>(props.item?.typeId || 1);
+    const [editableSubType, setEditableSubType] = useState<number>(props.item?.subType || 1);
     const [editableIsFrequent, setEditableIsFrequent] = useState(props.item?.isFrequent || false);
     const [editableComment, setEditableComment] = useState<string>(props.item?.comment || '');
     const [editableDirection, setEditableDirection] = useState<number>(props.item?.direction || 0);
     const [dateLanded, setDateLanded] = React.useState<Date>(
       dateFns.parse(formatAsCommon(props.item ? props.item.date : new Date()), "MM/dd/yyyy", new Date())
     );
+
+    function clearForm() {
+      setEditableAmount(0);
+      setEditableDirection(editableDirection)
+      setEditableType(1);
+      setEditableSubType(1);
+      setEditableIsFrequent(false);
+      setEditableComment('');
+      setDateLanded(dateLanded);
+    }
 
     function onSaveButton() {
         if (isNew) {
@@ -52,8 +62,8 @@ export default function AddEditSpendModal(props: Props) {
           props.onSave({
             id: props.item!.id,
             amount: editableAmount,
-            typeId: props.item!.typeId,
-            subType: props.item!.subType,
+            typeId: props.item!.typeId || 1,
+            subType: props.item!.subType || 1,
             date: dateLanded,
             isFrequent: editableIsFrequent,
             comment: editableComment,
@@ -62,10 +72,15 @@ export default function AddEditSpendModal(props: Props) {
             rawDate: formatAsCommon(dateLanded)
           } as ISpent, false);
         }
+
+        clearForm();
     }
 
     return (
-        <Modal show={props.show} onHide={props.onClose}>
+        <Modal show={props.show} onHide={() => {
+          props.onClose();
+          clearForm();
+        }}>
         <Modal.Header closeButton>
           <Modal.Title>{props.item ? "Edit spend" : "Create spend"}</Modal.Title>
         </Modal.Header>
@@ -87,6 +102,8 @@ export default function AddEditSpendModal(props: Props) {
         <InputGroup.Text  >{props.item ? props.item.currencySign : zlotyCurrencySign}</InputGroup.Text>
         <Form.Control aria-label="Amount" type="number" placeholder="10.00" value={editableAmount} onChange={(e) => {
           const stringValue = e.target.value;
+          console.log(stringValue);
+          
           if (isNumeric(stringValue)) {
               setEditableAmount(parseFloat(stringValue));
           }
@@ -107,7 +124,10 @@ export default function AddEditSpendModal(props: Props) {
 
             </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={props.onClose}>
+          <Button variant="secondary" onClick={() => {
+            props.onClose();
+            clearForm();
+          }}>
             Close
           </Button>
           <Button variant="primary" onClick={onSaveButton}>

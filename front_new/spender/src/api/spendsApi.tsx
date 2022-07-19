@@ -57,10 +57,10 @@ export default class spendsApi {
         return true;
    }
 
-   async create(item: ISpent) : Promise<boolean> {
+   async create(item: ISpent) : Promise<ISpent | undefined> {
     var that = this.axios;
 
-    await this.axios.post(this.apiUrl + '/create', item, {
+    var response = await this.axios.post(this.apiUrl + '/create', item, {
             'content-type': 'text/json;charset=utf-8'
         }).catch(function (error: any) {
         console.log(error);
@@ -68,9 +68,9 @@ export default class spendsApi {
             that.errorHandler();
         }
 
-        return false;
+        return undefined;
     });
 
-    return true;
+    return response.data as ISpent;
 }
 }

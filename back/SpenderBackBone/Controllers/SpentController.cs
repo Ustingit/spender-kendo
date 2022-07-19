@@ -59,18 +59,14 @@ namespace SpenderBackBone.Controllers
         [HttpPost]
 		public async Task<SpentViewModel> Create([FromBody]SpentViewModel newSpent)
 		{
-			var maxExistId = await _context.Spends.MaxAsync(x => x.Id);
-			var test = (await _context.Spends.OrderByDescending(x => x.Id).Take(1).FirstOrDefaultAsync())?.Id ?? 0;
-
-            var obj = new Spent()
+			var obj = new Spent()
             {
-                Id = maxExistId + 1,
                 Date = DateTime.ParseExact(newSpent.RawDate, "d", CultureInfo.InvariantCulture),
 				UserId = 1,
                 Comment = newSpent.Comment,
                 Amount = newSpent.Amount,
-                TypeId = newSpent.TypeId,
-                SubTypeId = newSpent.SubType,
+                TypeId = 1,
+                SubTypeId = 1,
 				Currency = CurrencyHelper.GetCurrencyBySign(newSpent.CurrencySign),
 				Direction = (Direction) newSpent.Direction
             };
@@ -78,7 +74,8 @@ namespace SpenderBackBone.Controllers
             await _context.Spends.AddAsync(obj);
             await _context.SaveChangesAsync();
 
-            return obj.AsViewModel();
+			return (await _context.Spends.Include(x => x.Type).Include(x => x.SubType)
+				.FirstOrDefaultAsync(x => x.Id == obj.Id)).AsViewModel();
 		}
 
 		[Route("edit")]

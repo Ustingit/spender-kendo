@@ -25,7 +25,8 @@ namespace SpenderBackBone.Extensions
 				TypeName = spent.Type?.Name,
 				SubTypeName = spent.SubType?.Name,
 				IsChanged = false,
-				IsFrequent = false
+				IsFrequent = false,
+				RawDate = spent.Date.ToString("d")
 			};
 		}
 	}
