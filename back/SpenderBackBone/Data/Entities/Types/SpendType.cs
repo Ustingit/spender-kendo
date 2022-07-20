@@ -17,5 +17,7 @@ namespace SpenderBackBone.Data.Entities.Types
 
 		[Required]
 		public Direction Direction { get; set; }
+
+		public IEnumerable<SpendSubType> SubTypes { get; set; }
 	}
 }

@@ -33,8 +33,6 @@ namespace SpenderBackBone.Controllers
         [HttpGet]
 		public async Task<IEnumerable<SpentViewModel>> Get()
 		{
-			var test = await _context.Spends.Where(x => (new Direction[] { Direction.Income, Direction.Outcome }).Contains(x.Direction)).ToArrayAsync();
-
 			var items = (await _context.Spends.Include(x => x.Type).Include(x => x.SubType).ToListAsync()).Select(x => new SpentViewModel()
 			{
                 Id = x.Id,
