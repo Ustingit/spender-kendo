@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -8,6 +8,8 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import TopNavbar from './components/navbars/TopNavbar'
 import SpendsGrid from './components/DataComponents/SpendsGrid';
+import SpendContext from './business/SpendContextInfo';
+import contextApi from './api/spendsContextApi';
 
 // alert
 //+ fetch of data
@@ -28,6 +30,17 @@ import SpendsGrid from './components/DataComponents/SpendsGrid';
 
 function App() {
   const [searchString, setSearchString] = useState<string>("");
+  const [context, setContext] = useState<SpendContext | null>(null);
+
+  async function fetchContext() {
+    const context = await new contextApi().fetchContext();
+    setContext(context);
+  }
+  
+  useEffect(() => {
+    fetchContext();
+    console.log('after fetching', context);
+  }, [])
 
   return (
     <Container fluid >
