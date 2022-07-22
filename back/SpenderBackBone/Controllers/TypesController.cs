@@ -25,15 +25,18 @@ namespace SpenderBackBone.Controllers
 		[HttpGet]
 		public async Task<TypesSubtypesDto> GetCombinedTypesSubtypes()
 		{
+			var indexes = (typesIndex: 0, subTypesIndex: 0);
+
 			return new TypesSubtypesDto()
 			{
 				Directions = DirectionHelper.GetPairedDirections(),
-				Types = (await _context.Types.ToListAsync()).Select(x => new TypeIdTextPair(x)).ToArray(),
+				Types = (await _context.Types.ToListAsync()).Select(x => new TypeIdTextPair(x, indexes.typesIndex++ == 0)).ToArray(),
 				SubTypes = (await _context.SubTypes.ToListAsync()).Select(x => new IdTextPair()
 				{
 					Id = x.Id,
 					Name = x.Name,
-					Parent = x.ParentTypeId
+					Parent = x.ParentTypeId,
+					Selected = indexes.subTypesIndex++ == 0
 				}).ToArray()
 			};
 		}

@@ -18,6 +18,9 @@ namespace SpenderBackBone.Data.Dtos
 		[JsonProperty("parent")]
 		public int? Parent { get; set; }
 
+		[JsonProperty("selected")]
+		public bool Selected { get; set; }
+
 		[JsonIgnore]
 		public bool HasParent => Parent.HasValue;
 	}

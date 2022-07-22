@@ -10,13 +10,13 @@ namespace SpenderBackBone.Data.Entities
 
 	public static class DirectionHelper
 	{
-		public static IdTextPair[] GetPairedDirections()
+		public static IdTextPair[] GetPairedDirections(Direction selected = Direction.Outcome)
 		{
 			return new IdTextPair[]
 			{
 				//TODO: translations here
-				new IdTextPair() { Id = (int)Direction.Outcome, Name = "Расход" },
-				new IdTextPair() { Id = (int)Direction.Income, Name = "Доход" }
+				new IdTextPair() { Id = (int)Direction.Outcome, Name = "Расход", Selected = selected == Direction.Outcome },
+				new IdTextPair() { Id = (int)Direction.Income, Name = "Доход", Selected = selected == Direction.Outcome }
 			};
 		}
 	}

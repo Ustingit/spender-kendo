@@ -15,11 +15,12 @@ namespace SpenderBackBone.Data.Dtos
 		{
 		}
 
-		public TypeIdTextPair(SpendType type)
+		public TypeIdTextPair(SpendType type, bool selected = false)
 		{
 			Id = type.Id;
 			Name = type.Name;
 			Direction = type.Direction;
+			Selected = selected;
 		}
 
 		[JsonProperty("direction")]
