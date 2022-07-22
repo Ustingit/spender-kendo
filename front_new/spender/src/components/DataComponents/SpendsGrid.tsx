@@ -9,9 +9,11 @@ import spendsApi from '../../api/spendsApi';
 import { isNumeric } from '../../helpers/numberHelper'
 import { updateSpend } from '../../helpers/business/spendsHelper';
 import AddEditSpendModal from '../DataComponents/AddEditSpend';
+import SpendContext from '../../business/SpendContextInfo';
 
 interface Props {
     filterValue: string;
+    context: SpendContext | null;
 }
 
 function filterValues(items: ISpent[], filter: string) : ISpent[] {
@@ -90,11 +92,11 @@ export default function SpendsGrid(props: Props) {
         <Container fluid>
         <div>
             <Button variant="primary" onClick={() => setShowCreatePopup(true)} >Add spend</Button>{' '}
-            <AddEditSpendModal show={showCreatePopup} onClose={() => setShowCreatePopup(false)} onSave={editSpend} item={undefined} />
+            <AddEditSpendModal show={showCreatePopup} onClose={() => setShowCreatePopup(false)} onSave={editSpend} item={undefined} context={props.context} />
         </div>
         {itemsToRepresent.map((element) => {
             return (
-                <SpendCard concreteSpent={element} key={element.id} onDelete={deleteSpend} onEdit={editSpend} showPopup={showEditPopup} onSetShowPopup={setShowEditPopup} />
+                <SpendCard concreteSpent={element} key={element.id} onDelete={deleteSpend} onEdit={editSpend} showPopup={showEditPopup} onSetShowPopup={setShowEditPopup}  context={props.context} />
             );
         })}
         </Container>

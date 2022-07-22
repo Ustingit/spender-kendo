@@ -11,16 +11,25 @@ import "react-datepicker/dist/react-datepicker.css";
 import * as dateFns from "date-fns";
 import { formatAsCommon } from '../../helpers/calendar';
 import { isNumeric } from '../../helpers/numberHelper';
+import SpendContext from '../../business/SpendContextInfo';
+import SpendType from '../../business/SpendType';
+import { IdTextPair } from '../../abstractions/IdTextPair';
+import DirectionSelector from './DirectionSelector';
 
 interface Props {
     show: boolean
     onClose: () => void
     onSave: (item: ISpent, isNew: boolean) => void
-    item?: ISpent
+    item?: ISpent,
+    context: SpendContext | null;
 }
 
 export default function AddEditSpendModal(props: Props) {
     const isNew = props.item === null || props.item === undefined;
+
+    const [spendTypes, setSpendTypes] = useState<SpendType[]>(props.context?.types || []);
+    const [spendSubTypes, setSubSpendTypes] = useState<IdTextPair[]>(props.context?.subTypes || []);
+    const [spendDirections, setSpendDirections] = useState<IdTextPair[]>(props.context?.directions || []);
     
     const [editableAmount, setEditableAmount] = useState<number>(props.item?.amount || 0);
     const [editableType, setEditableType] = useState<number>(props.item?.typeId || 1);
@@ -34,7 +43,7 @@ export default function AddEditSpendModal(props: Props) {
 
     function clearForm() {
       setEditableAmount(0);
-      setEditableDirection(editableDirection)
+      setEditableDirection(editableDirection || 0);
       setEditableType(1);
       setEditableSubType(1);
       setEditableIsFrequent(false);
@@ -108,6 +117,10 @@ export default function AddEditSpendModal(props: Props) {
               setEditableAmount(parseFloat(stringValue));
           }
         }} />
+      </InputGroup>
+
+      <InputGroup className="mb-3" >
+          <DirectionSelector directions={spendDirections} onSave={setEditableDirection} />
       </InputGroup>
 
       <FloatingLabel

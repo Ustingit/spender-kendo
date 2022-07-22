@@ -39,13 +39,12 @@ function App() {
   
   useEffect(() => {
     fetchContext();
-    console.log('after fetching', context);
   }, [])
 
   return (
     <Container fluid >
       <TopNavbar onFilterChange={(filterValue) => setSearchString(filterValue)} />
-      <SpendsGrid filterValue={searchString} />
+      <SpendsGrid filterValue={searchString} context={context} />
    </Container>
   );
 }

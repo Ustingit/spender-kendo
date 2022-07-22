@@ -5,9 +5,11 @@ export default class SpendType implements IdTextPair {
         this.id = id;
         this.name = name;
         this.direction = direction;
+        this.selected = false;
     }
 
     id: number;
     name: string;
     direction: number;
+    selected: boolean;
 }

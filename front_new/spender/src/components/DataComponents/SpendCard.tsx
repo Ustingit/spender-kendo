@@ -5,19 +5,21 @@ import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import ISpent from '../../business/SpentInterface'
 import AddEditSpendModal from '../DataComponents/AddEditSpend'
+import SpendContext from '../../business/SpendContextInfo';
 
 interface Props {
     concreteSpent: ISpent;
     onDelete: (id: number) => void
     onEdit: (item: ISpent, isNew: boolean) => void,
     onSetShowPopup: (value: boolean) => void,
-    showPopup: boolean
+    showPopup: boolean,
+    context: SpendContext | null;
 }
 
 export default function SpendCard(props: Props) {
     return (
         <Row>
-            <AddEditSpendModal show={props.showPopup} onClose={() => props.onSetShowPopup(false)} onSave={props.onEdit} item={props.concreteSpent} />
+            <AddEditSpendModal show={props.showPopup} onClose={() => props.onSetShowPopup(false)} onSave={props.onEdit} item={props.concreteSpent} context={props.context} />
                  <Col>
                  <Card style={{ width: '400rem' }}>
       <Card.Body>
