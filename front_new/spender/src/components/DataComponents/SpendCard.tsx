@@ -4,16 +4,16 @@ import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import ISpent from '../../business/SpentInterface'
-import AddEditSpendModal from '../DataComponents/AddEditSpend'
+import AddEditSpendModal from './EditSpend'
 import SpendContext from '../../business/SpendContextInfo';
 
 interface Props {
     concreteSpent: ISpent;
     onDelete: (id: number) => void
-    onEdit: (item: ISpent, isNew: boolean) => void,
+    onEdit: (item: ISpent) => void,
     onSetShowPopup: (value: boolean) => void,
     showPopup: boolean,
-    context: SpendContext | null;
+    context: SpendContext;
 }
 
 export default function SpendCard(props: Props) {

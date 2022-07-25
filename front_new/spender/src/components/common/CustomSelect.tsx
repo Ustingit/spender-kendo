@@ -27,7 +27,7 @@ export default function CustomSelect<Value>({
     mapOptionToLabel,
     mapOptionToValue
   }: Props<Value>) {
-    if (!options) {
+    if (!options || options.length === 0) {
       return <></>;
     }
 

@@ -13,19 +13,17 @@ export default function DirectionSelector(props: Props) {
     const [direction, setDirection] = React.useState<IdTextPair>(firstDirection);
 
     function customSave(pair: IdTextPair) {
-        setDirection(pair);
         if (pair) {
+          setDirection(pair);
           props.onSave(pair.id);
         }
     }
 
     return (
       <div>
-        <div>Value: {JSON.stringify(direction)}</div>
-  
         <CustomSelect
           value={direction}
-          onChange={setDirection}
+          onChange={customSave}
           options={props.directions}
           // has an error if no mapOptionToLabel is provided!
           mapOptionToLabel={(d: IdTextPair) => d.name}

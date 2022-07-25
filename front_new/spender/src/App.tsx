@@ -28,9 +28,11 @@ import contextApi from './api/spendsContextApi';
 // waiter for data spinner
 // pages (react-router)
 
+const emptyContext = new SpendContext([], [], []);
+
 function App() {
   const [searchString, setSearchString] = useState<string>("");
-  const [context, setContext] = useState<SpendContext | null>(null);
+  const [context, setContext] = useState<SpendContext>(emptyContext);
 
   async function fetchContext() {
     const context = await new contextApi().fetchContext();

@@ -8,12 +8,13 @@ import SpendCard from './SpendCard';
 import spendsApi from '../../api/spendsApi';
 import { isNumeric } from '../../helpers/numberHelper'
 import { updateSpend } from '../../helpers/business/spendsHelper';
-import AddEditSpendModal from '../DataComponents/AddEditSpend';
+import AddEditSpendModal from './EditSpend';
 import SpendContext from '../../business/SpendContextInfo';
+import CreateSpend from './CreateSpend';
 
 interface Props {
     filterValue: string;
-    context: SpendContext | null;
+    context: SpendContext;
 }
 
 function filterValues(items: ISpent[], filter: string) : ISpent[] {
@@ -52,19 +53,8 @@ export default function SpendsGrid(props: Props) {
         }
     } 
 
-    async function editSpend(item: ISpent, isNew: boolean) {
-        if (isNew) {
-            var savedSpend = await new spendsApi().create(item);
-
-            if (savedSpend) {
-                const updatedSpends = spends.concat(savedSpend);
-                setSpends(updatedSpends);
-            }
-
-            setShowCreatePopup(false);
-        } else {
-            var successful = await new spendsApi().edit(item);
-        
+    async function editSpend(item: ISpent) {
+        var successful = await new spendsApi().edit(item);
             if (successful) {
                 var newSpends = spends;
                 const index = newSpends.findIndex((obj => obj.id === item.id));
@@ -77,7 +67,17 @@ export default function SpendsGrid(props: Props) {
             }
 
             setShowEditPopup(false);
-        }
+    }
+
+    async function addSpend(item: ISpent) {
+        var savedSpend = await new spendsApi().create(item);
+
+            if (savedSpend) {
+                const updatedSpends = spends.concat(savedSpend);
+                setSpends(updatedSpends);
+            }
+
+            setShowCreatePopup(false);
     }
 
     if (!spends) {
@@ -92,7 +92,7 @@ export default function SpendsGrid(props: Props) {
         <Container fluid>
         <div>
             <Button variant="primary" onClick={() => setShowCreatePopup(true)} >Add spend</Button>{' '}
-            <AddEditSpendModal show={showCreatePopup} onClose={() => setShowCreatePopup(false)} onSave={editSpend} item={undefined} context={props.context} />
+            <CreateSpend show={showCreatePopup} onClose={() => setShowCreatePopup(false)} onSave={addSpend} context={props.context} />
         </div>
         {itemsToRepresent.map((element) => {
             return (
