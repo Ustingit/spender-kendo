@@ -17,28 +17,29 @@ import { IdTextPair } from '../../abstractions/IdTextPair';
 import DirectionSelector from './DirectionSelector';
 
 interface Props {
-    show: boolean
     onClose: () => void
     onSave: (item: ISpent) => void
-    item: ISpent,
+    item: ISpent | null,
     context: SpendContext;
 }
 
-export default function AddEditSpendModal(props: Props) {
+export default function EditSpendModal(props: Props) {
+    const spendToEdit = props.item ?? {} as ISpent;
+
     const [spendTypes, setSpendTypes] = useState<SpendType[]>(props.context.types);
     const [spendSubTypes, setSubSpendTypes] = useState<IdTextPair[]>(props.context.subTypes);
     const [spendDirections, setSpendDirections] = useState<IdTextPair[]>(props.context.directions);
     
-    const [editableAmount, setEditableAmount] = useState<number>(props.item.amount);
-    const [editableType, setEditableType] = useState<number>(props.item.typeId);
-    const [editableSubType, setEditableSubType] = useState<number>(props.item.subType);
-    const [editableIsFrequent, setEditableIsFrequent] = useState(props.item.isFrequent);
-    const [editableComment, setEditableComment] = useState<string>(props.item.comment || '');
-    const [editableDirection, setEditableDirection] = useState<number>(props.item.direction);
+    const [editableAmount, setEditableAmount] = useState<number>(spendToEdit.amount);
+    const [editableType, setEditableType] = useState<number>(spendToEdit.typeId);
+    const [editableSubType, setEditableSubType] = useState<number>(spendToEdit.subType);
+    const [editableIsFrequent, setEditableIsFrequent] = useState(spendToEdit.isFrequent);
+    const [editableComment, setEditableComment] = useState<string>(spendToEdit.comment || '');
+    const [editableDirection, setEditableDirection] = useState<number>(spendToEdit.direction);
     const [dateLanded, setDateLanded] = React.useState<Date>(
-      dateFns.parse(formatAsCommon(props.item ? props.item.date : new Date()), "MM/dd/yyyy", new Date())
+      dateFns.parse(formatAsCommon(spendToEdit ? spendToEdit.date : new Date()), "MM/dd/yyyy", new Date())
     );
-
+    debugger
     function clearForm() {
       setEditableAmount(0);
       setEditableDirection(editableDirection || 0);
@@ -51,14 +52,14 @@ export default function AddEditSpendModal(props: Props) {
 
     function onSaveButton() {
       props.onSave({
-        id: props.item!.id,
+        id: spendToEdit?.id,
         amount: editableAmount,
-        typeId: props.item!.typeId || 1,
-        subType: props.item!.subType || 1,
+        typeId: spendToEdit?.typeId || 1,
+        subType: spendToEdit?.subType || 1,
         date: dateLanded,
         isFrequent: editableIsFrequent,
         comment: editableComment,
-        currencySign: props.item!.currencySign,
+        currencySign: spendToEdit!.currencySign,
         direction: editableDirection,
         rawDate: formatAsCommon(dateLanded)
       } as ISpent);
@@ -66,12 +67,12 @@ export default function AddEditSpendModal(props: Props) {
         clearForm();
     }
 
-    if (!props.show || !props.item || !props.context) {
+    if (!props.item || !props.context) {
       return <></>;
     }
 
     return (
-        <Modal show={props.show} onHide={() => {
+        <Modal show={true} onHide={() => {
           props.onClose();
           clearForm();
         }}>
@@ -93,7 +94,7 @@ export default function AddEditSpendModal(props: Props) {
       </div>
 
       <InputGroup className="mb-3">
-        <InputGroup.Text  >{props.item ? props.item.currencySign : zlotyCurrencySign}</InputGroup.Text>
+        <InputGroup.Text>{props.item ? props.item.currencySign : zlotyCurrencySign}</InputGroup.Text>
         <Form.Control aria-label="Amount" type="number" placeholder="10.00" value={editableAmount} onChange={(e) => {
           const stringValue = e.target.value;
           console.log(stringValue);
