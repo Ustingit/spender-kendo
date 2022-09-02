@@ -1,11 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
-import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import TopNavbar from './components/navbars/TopNavbar'
 import SpendsGrid from './components/DataComponents/SpendsGrid';
 import SpendContext from './business/SpendContextInfo';
@@ -24,7 +19,7 @@ import contextApi from './api/spendsContextApi';
 // images spend or income
 // +type to db income or spend
 // +search for concrete spent
-// grouping by date
+// +grouping by date
 // waiter for data spinner
 // pages (react-router)
 

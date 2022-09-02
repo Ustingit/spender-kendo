@@ -11,6 +11,9 @@ import { updateSpend } from '../../helpers/business/spendsHelper';
 import SpendContext from '../../business/SpendContextInfo';
 import CreateSpend from './CreateSpend';
 import EditSpendModal from './EditSpend';
+import { groupDataByDateAsString } from '../../helpers/dataTransmutators';
+import * as _ from "lodash";
+import { Dictionary } from "lodash";
 
 interface Props {
     filterValue: string;
@@ -93,8 +96,8 @@ export default function SpendsGrid(props: Props) {
     }
 
     const itemsToRepresent = props && props.filterValue 
-        ? filterValues(spends, props.filterValue) 
-        : spends;
+        ? groupDataByDateAsString(filterValues(spends, props.filterValue) , "date")
+        : groupDataByDateAsString(spends, "date");
 
     return (
         <Container fluid>
@@ -102,12 +105,22 @@ export default function SpendsGrid(props: Props) {
             <Button variant="primary" onClick={() => setShowCreatePopup(true)} >Add spend</Button>{' '}
             {showCreatePopup && <CreateSpend show={showCreatePopup} onClose={() => setShowCreatePopup(false)} onSave={addSpend} context={props.context} />}
             {showEditPopup && <EditSpendModal onClose={() => setShowEditPopup(false)} onSave={editSpend} item={itemToEdit} context={props.context} />}
+            <p style={{marginTop: "5px"}}>Spends:</p>
         </div>
-        {itemsToRepresent.map((element) => {
-            return (
-                <SpendCard concreteSpent={element} key={element.id} onDelete={deleteSpend} onEditPopupShow={onEditPopupShow} />
-            );
-        })}
+        {
+            _.keys(itemsToRepresent).map((key) => {
+                return (
+                    <div className="period bold"  style={{width: "100%"}} >
+                        <p>Date: {key}</p>
+                        {
+                            itemsToRepresent[key].map((element) => {
+                                return <SpendCard concreteSpent={element} key={element.id} onDelete={deleteSpend} onEditPopupShow={onEditPopupShow} />
+                            })
+                        }
+                    </div>
+                );
+            })
+        }
         </Container>
     );
 }
