@@ -4,6 +4,8 @@ import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import ISpent from '../../business/SpentInterface'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowTrendUp, faArrowTrendDown } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
     concreteSpent: ISpent;
@@ -12,12 +14,15 @@ interface Props {
 }
 
 export default function SpendCard(props: Props) {
+    var arrow = props.concreteSpent.direction === 0 ? faArrowTrendDown : faArrowTrendUp;
+
     return (
         <Row>
                  <Col>
                  <Card style={{ width: '400rem' }}>
+                    <Card.Header><FontAwesomeIcon icon={arrow} /></Card.Header>
       <Card.Body>
-        <Card.Title>{props.concreteSpent.amount}</Card.Title>
+        <Card.Title>{props.concreteSpent.currencySign} {props.concreteSpent.amount}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted">{props.concreteSpent.typeName} {props.concreteSpent.subTypeName && props.concreteSpent.subTypeName}</Card.Subtitle>
         <Card.Text>
             {props.concreteSpent.comment}
