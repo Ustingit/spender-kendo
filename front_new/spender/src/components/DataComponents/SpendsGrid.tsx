@@ -14,6 +14,7 @@ import EditSpendModal from './EditSpend';
 import { groupDataByDateAsString } from '../../helpers/dataTransmutators';
 import * as _ from "lodash";
 import { Dictionary } from "lodash";
+import { BasicSpinner } from '../common/Spinners/CommonSpinner';
 
 interface Props {
     filterValue: string;
@@ -34,6 +35,7 @@ function filterValues(items: ISpent[], filter: string) : ISpent[] {
 }
 
 export default function SpendsGrid(props: Props) {
+    const [loading, setLoading] = useState<boolean>(true);
     const [spends, setSpends] = useState<ISpent[]>([]);
     const [showEditPopup, setShowEditPopup] = useState<boolean>(false);
     const [showCreatePopup, setShowCreatePopup] = useState<boolean>(false);
@@ -42,6 +44,7 @@ export default function SpendsGrid(props: Props) {
     async function FetchAllSpends() {
         var spends = await new spendsApi().fetchAll();
         setSpends(spends);
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -91,8 +94,8 @@ export default function SpendsGrid(props: Props) {
             setShowCreatePopup(false);
     }
 
-    if (!spends) {
-        return <Container><Row>...loading...</Row></Container>
+    if (loading) {
+        return <Container><Row><BasicSpinner /></Row></Container>
     }
 
     const itemsToRepresent = props && props.filterValue 

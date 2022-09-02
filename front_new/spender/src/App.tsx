@@ -22,8 +22,9 @@ import contextApi from './api/spendsContextApi';
 // +type to db income or spend
 // +search for concrete spent
 // +grouping by date
-// waiter for data spinner
+// +waiter for data spinner
 // pages (react-router)
+// all the selectors for types\subtypes\etc
 
 const emptyContext = new SpendContext([], [], []);
 
