@@ -12,7 +12,9 @@ import contextApi from './api/spendsContextApi';
 // authorization, modern
 // toasts
 // first report
-// full crud
+// report to excel
+// report to pdf (this new package of poland guy from JetBrains)
+// +full crud
 // state
 // forms with validations
 // translations

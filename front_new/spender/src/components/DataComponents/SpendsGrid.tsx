@@ -111,7 +111,7 @@ export default function SpendsGrid(props: Props) {
             _.keys(itemsToRepresent).map((key) => {
                 return (
                     <div className="period bold"  style={{width: "100%"}} >
-                        <p>Date: {key}</p>
+                        <p>{new Date(key).toLocaleString('en-us',{month:'short', year:'numeric', day: 'numeric'})}</p>
                         {
                             itemsToRepresent[key].map((element) => {
                                 return <SpendCard concreteSpent={element} key={element.id} onDelete={deleteSpend} onEditPopupShow={onEditPopupShow} />
