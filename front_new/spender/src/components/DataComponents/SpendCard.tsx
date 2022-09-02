@@ -17,7 +17,7 @@ export default function SpendCard(props: Props) {
                  <Col>
                  <Card style={{ width: '400rem' }}>
       <Card.Body>
-        <Card.Title>{props.concreteSpent.amount} (айди: {props.concreteSpent.id})</Card.Title>
+        <Card.Title>{props.concreteSpent.amount}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted">{props.concreteSpent.typeName} {props.concreteSpent.subTypeName && props.concreteSpent.subTypeName}</Card.Subtitle>
         <Card.Text>
             {props.concreteSpent.comment}
