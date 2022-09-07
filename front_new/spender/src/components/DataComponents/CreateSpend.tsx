@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SpendContext from '../../business/SpendContextInfo';
 import ISpent from '../../business/SpentInterface';
 import { zlotyCurrencySign } from '../../constants';
@@ -13,9 +13,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import * as dateFns from "date-fns";
 import { isNumeric } from '../../helpers/numberHelper';
 import SpendType from '../../business/SpendType';
-import { IdTextPair } from '../../abstractions/IdTextPair';
+import { IdTextPairWithParent } from '../../abstractions/IdTextPair';
 import DirectionSelector from './DirectionSelector';
-
+import TypeSelector from './TypeSelector';
+import SubTypeSelector from './SubTypeSelectors';
 
 interface Props {
     show: boolean
@@ -25,25 +26,43 @@ interface Props {
 }
 
 export default function CreateSpend(props: Props) {
-    const [spendTypes, setSpendTypes] = useState<SpendType[]>(props.context.types);
-    const [spendSubTypes, setSubSpendTypes] = useState<IdTextPair[]>(props.context.subTypes);
-    const [spendDirections, setSpendDirections] = useState<IdTextPair[]>(props.context.directions);
-    
-    const [editableAmount, setEditableAmount] = useState<number>(0);
-    const [editableType, setEditableType] = useState<number>(1);
-    const [editableSubType, setEditableSubType] = useState<number>(1);
+    const [editableDirection, setEditableDirection] = useState<number>(props.context.defaultDirection);
+    const [spendTypes, setSpendTypes] = useState<SpendType[]>(props.context.initialMatchedTypes);
+    const [editableType, setEditableType] = useState<number>(props.context.defaultType);
+    const [spendSubTypes, setSubSpendTypes] = useState<IdTextPairWithParent[]>(props.context.initialMatchedSubTypes);
+    const [editableSubType, setEditableSubType] = useState<number | null>(props.context.defaultSubType);
+    const [editableAmount, setEditableAmount] = useState<number>(3.40);
     const [editableIsFrequent, setEditableIsFrequent] = useState(false);
     const [editableComment, setEditableComment] = useState<string>('');
-    const [editableDirection, setEditableDirection] = useState<number>(0);
     const [dateLanded, setDateLanded] = React.useState<Date>(
       dateFns.parse(formatAsCommon(new Date()), "MM/dd/yyyy", new Date())
     );
 
+    useEffect(() => {
+      console.log('editableDirection now is: ', editableDirection);
+      var matchedTypes = spendTypes.filter(t => t.direction === editableDirection);
+      var type = matchedTypes[0].id;
+      var matchedSubTypes = props.context.subTypes.filter(st => st.parent && st.parent === type);
+      console.log('matchedTypes: ', matchedTypes);
+      setSpendTypes(matchedTypes || []);
+      setEditableType(type);
+    }, [editableDirection]);
+
+    useEffect(() => {
+      console.log('editableType now is: ', editableType);
+      var matchedSubTypes = props.context.subTypes.filter(st => st.parent && st.parent === editableType);
+      console.log('matchedSubTypes: ', matchedSubTypes);
+      setSubSpendTypes(matchedSubTypes || []);
+      if (matchedSubTypes.length > 0) {
+        setEditableSubType(matchedSubTypes[0].id);
+      }
+    }, [editableType]);
+
     function clearForm() {
       setEditableAmount(0);
-      setEditableDirection(editableDirection || 0);
-      setEditableType(1);
-      setEditableSubType(1);
+      setEditableDirection(props.context.defaultDirection);
+      setEditableType(props.context.defaultType);
+      setEditableSubType(props.context.defaultSubType);
       setEditableIsFrequent(false);
       setEditableComment('');
       setDateLanded(dateLanded);
@@ -53,8 +72,8 @@ export default function CreateSpend(props: Props) {
         props.onSave({
             id: 0,
             amount: editableAmount,
-            typeId: 0,
-            subType: 0,
+            typeId: editableType,
+            subType: editableSubType,
             date: dateLanded,
             isFrequent: editableIsFrequent,
             comment: editableComment,
@@ -96,8 +115,6 @@ export default function CreateSpend(props: Props) {
         <InputGroup.Text  >{zlotyCurrencySign}</InputGroup.Text>
         <Form.Control aria-label="Amount" type="number" placeholder="10.00" value={editableAmount} onChange={(e) => {
           const stringValue = e.target.value;
-          console.log(stringValue);
-          
           if (isNumeric(stringValue)) {
               setEditableAmount(parseFloat(stringValue));
           }
@@ -105,9 +122,17 @@ export default function CreateSpend(props: Props) {
       </InputGroup>
 
       <InputGroup className="mb-3" >
-          <DirectionSelector directions={spendDirections} onSave={setEditableDirection} />
+          <DirectionSelector directions={props.context.directions} onSave={setEditableDirection} />
       </InputGroup>
-
+      <InputGroup className="mb-3" >
+          <TypeSelector types={spendTypes} onSave={setEditableType} />
+      </InputGroup>
+      {spendSubTypes !== undefined && spendSubTypes.length > 0 && <>
+        <InputGroup className="mb-3" >
+          <SubTypeSelector subTypes={spendSubTypes} onSave={setEditableSubType} />
+      </InputGroup>
+      </>}
+      
       <FloatingLabel
         controlId="floatingCommentTextarea"
         label="Comment"

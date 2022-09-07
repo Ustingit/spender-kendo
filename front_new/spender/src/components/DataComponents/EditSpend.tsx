@@ -32,7 +32,7 @@ export default function EditSpendModal(props: Props) {
     
     const [editableAmount, setEditableAmount] = useState<number>(spendToEdit.amount);
     const [editableType, setEditableType] = useState<number>(spendToEdit.typeId);
-    const [editableSubType, setEditableSubType] = useState<number>(spendToEdit.subType);
+    const [editableSubType, setEditableSubType] = useState<number | null>(spendToEdit.subType || null);
     const [editableIsFrequent, setEditableIsFrequent] = useState(spendToEdit.isFrequent);
     const [editableComment, setEditableComment] = useState<string>(spendToEdit.comment || '');
     const [editableDirection, setEditableDirection] = useState<number>(spendToEdit.direction);

@@ -26,7 +26,7 @@ import contextApi from './api/spendsContextApi';
 // pages (react-router)
 // all the selectors for types\subtypes\etc
 
-const emptyContext = new SpendContext([], [], []);
+const emptyContext = new SpendContext([], [], [], 0, null, 0);
 
 function App() {
   const [searchString, setSearchString] = useState<string>("");

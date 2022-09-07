@@ -19,7 +19,7 @@ export default function SpendCard(props: Props) {
     return (
         <Row>
                  <Col>
-                 <Card style={{ width: '400rem' }}>
+                 <Card style={{ width: "100%" }}>
                     <Card.Header><FontAwesomeIcon icon={arrow} /></Card.Header>
       <Card.Body>
         <Card.Title>{props.concreteSpent.currencySign} {props.concreteSpent.amount}</Card.Title>

@@ -13,7 +13,6 @@ import CreateSpend from './CreateSpend';
 import EditSpendModal from './EditSpend';
 import { groupDataByDateAsString } from '../../helpers/dataTransmutators';
 import * as _ from "lodash";
-import { Dictionary } from "lodash";
 import { BasicSpinner } from '../common/Spinners/CommonSpinner';
 
 interface Props {
@@ -111,9 +110,9 @@ export default function SpendsGrid(props: Props) {
             <p style={{marginTop: "5px"}}>Spends:</p>
         </div>
         {
-            _.keys(itemsToRepresent).map((key) => {
+            _.keys(itemsToRepresent).map((key, index) => {
                 return (
-                    <div className="period bold"  style={{width: "100%"}} >
+                    <div className="period bold" key={index} style={{width: "100%"}} >
                         <p>{new Date(key).toLocaleString('en-us',{month:'short', year:'numeric', day: 'numeric'})}</p>
                         {
                             itemsToRepresent[key].map((element) => {

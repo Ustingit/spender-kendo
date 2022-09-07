@@ -25,6 +25,7 @@ export default class contextApi {
             return undefined;
         });
 
-        return new SpendContext(response.data.types, response.data.subTypes, response.data.directions);
+        return new SpendContext(response.data.types, response.data.subTypes, response.data.directions, 
+            response.data.defaultType, response.data.defaultSubType, response.data.defaultDirection);
     }
 }

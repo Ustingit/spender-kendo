@@ -4,7 +4,7 @@ export default interface ISpent {
     userId: number,
     typeId: number,
     typeName: string,
-    subType: number,
+    subType: number | null,
     subTypeName: string,
     date: Date,
     isChanged: boolean,

@@ -1,7 +1,8 @@
 import React from 'react';
 import { IdTextPair } from '../../abstractions/IdTextPair';
+import SpendType from '../../business/SpendType';
 
-type Allowed = string | number | IdTextPair;
+type Allowed = string | number | IdTextPair | SpendType;
 type AllowedConvertions = string | number;
 
 type BaseProps<Value> = {
