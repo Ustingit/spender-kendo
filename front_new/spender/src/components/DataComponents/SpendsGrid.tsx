@@ -33,12 +33,14 @@ function filterValues(items: ISpent[], filter: string) : ISpent[] {
     );
 }
 
+const emptyDefaultSpend = {} as ISpent;
+
 export default function SpendsGrid(props: Props) {
     const [loading, setLoading] = useState<boolean>(true);
     const [spends, setSpends] = useState<ISpent[]>([]);
     const [showEditPopup, setShowEditPopup] = useState<boolean>(false);
     const [showCreatePopup, setShowCreatePopup] = useState<boolean>(false);
-    const [itemToEdit, setItemToEdit] = useState<ISpent | null>(null);
+    const [itemToEdit, setItemToEdit] = useState<ISpent>(emptyDefaultSpend);
 
     async function FetchAllSpends() {
         var spends = await new spendsApi().fetchAll();
@@ -62,7 +64,6 @@ export default function SpendsGrid(props: Props) {
     async function editSpend(item: ISpent) {
         var successful = await new spendsApi().edit(item);
             if (successful) {
-                debugger
                 var newSpends = spends;
                 const index = newSpends.findIndex((obj => obj.id === item.id));
                 const itemToUpdate = newSpends[index];
@@ -77,7 +78,6 @@ export default function SpendsGrid(props: Props) {
     }
 
     function onEditPopupShow(item: ISpent) {
-        debugger
         setItemToEdit(item);
         setShowEditPopup(true);
     }
