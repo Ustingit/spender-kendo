@@ -39,19 +39,14 @@ export default function CreateSpend(props: Props) {
     );
 
     useEffect(() => {
-      console.log('editableDirection now is: ', editableDirection);
-      var matchedTypes = spendTypes.filter(t => t.direction === editableDirection);
+      var matchedTypes = props.context.types.filter(t => t.direction === editableDirection);
       var type = matchedTypes[0].id;
-      var matchedSubTypes = props.context.subTypes.filter(st => st.parent && st.parent === type);
-      console.log('matchedTypes: ', matchedTypes);
       setSpendTypes(matchedTypes || []);
       setEditableType(type);
     }, [editableDirection]);
 
     useEffect(() => {
-      console.log('editableType now is: ', editableType);
       var matchedSubTypes = props.context.subTypes.filter(st => st.parent && st.parent === editableType);
-      console.log('matchedSubTypes: ', matchedSubTypes);
       setSubSpendTypes(matchedSubTypes || []);
       if (matchedSubTypes.length > 0) {
         setEditableSubType(matchedSubTypes[0].id);
