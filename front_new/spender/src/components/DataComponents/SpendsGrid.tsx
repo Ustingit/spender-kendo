@@ -14,6 +14,7 @@ import EditSpendModal from './EditSpend';
 import { groupDataByDateAsString } from '../../helpers/dataTransmutators';
 import * as _ from "lodash";
 import { BasicSpinner } from '../common/Spinners/CommonSpinner';
+import SpendStatistics from './SpendStatistics';
 
 interface Props {
     filterValue: string;
@@ -103,6 +104,7 @@ export default function SpendsGrid(props: Props) {
 
     return (
         <Container fluid>
+        <SpendStatistics statistics={props.context.statisticsDto} />
         <div>
             <Button variant="primary" onClick={() => setShowCreatePopup(true)} >Add spend</Button>{' '}
             {showCreatePopup && <CreateSpend show={showCreatePopup} onClose={() => setShowCreatePopup(false)} onSave={addSpend} context={props.context} />}

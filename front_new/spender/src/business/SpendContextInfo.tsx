@@ -1,14 +1,17 @@
 import { IdTextPair, IdTextPairWithParent } from "../abstractions/IdTextPair";
+import StatisticsDto from "./SpendStatistics";
 import SpendType from "./SpendType";
 
 export default class SpendContext {
-    constructor(types: SpendType[], subTypes: IdTextPairWithParent[], directions: IdTextPair[], defaultType: number, defaultSubType: number | null, defaultDirection: number) {
+    constructor(types: SpendType[], subTypes: IdTextPairWithParent[], directions: IdTextPair[], defaultType: number, defaultSubType: number | null, defaultDirection: number,
+        statisticsDto: StatisticsDto) {
         this.subTypes = subTypes || [];
         this.directions = directions || [];
         this.types = types || [];
         this.defaultType = defaultType;
         this.defaultSubType = defaultSubType;
         this.defaultDirection = defaultDirection;
+        this.statisticsDto = statisticsDto;
 
         this.initialMatchedTypes = types.filter(t => t.direction === defaultDirection) || [];
         this.initialMatchedSubTypes = this.subTypes.filter(st => st.parent && st.parent === defaultType) || [];
@@ -51,6 +54,7 @@ export default class SpendContext {
     defaultType: number;
     defaultSubType: number | null;
     defaultDirection: number;
+    statisticsDto: StatisticsDto;
 
     initialMatchedTypes: SpendType[];
     initialMatchedSubTypes: IdTextPairWithParent[];

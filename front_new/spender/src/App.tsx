@@ -5,6 +5,7 @@ import TopNavbar from './components/navbars/TopNavbar'
 import SpendsGrid from './components/DataComponents/SpendsGrid';
 import SpendContext from './business/SpendContextInfo';
 import contextApi from './api/spendsContextApi';
+import StatisticsDto from './business/SpendStatistics';
 
 // alert
 //+ fetch of data
@@ -26,8 +27,10 @@ import contextApi from './api/spendsContextApi';
 // pages (react-router)
 // +all the selectors for types\subtypes\etc
 // add total sum to the page
+// move helpers in back-end to external nuget package and use it in next applications
 
-const emptyContext = new SpendContext([], [], [], 0, null, 0);
+const emptyStatistics = new StatisticsDto(0, 0, 0, 0, 0, 0);
+const emptyContext = new SpendContext([], [], [], 0, null, 0, emptyStatistics);
 
 function App() {
   const [searchString, setSearchString] = useState<string>("");

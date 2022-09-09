@@ -1,5 +1,6 @@
 import { BACK_URL } from '../constants';
 import SpendContext from '../business/SpendContextInfo';
+import StatisticsDto from '../business/SpendStatistics';
 
 const contextUrl = 'Types';
 
@@ -25,7 +26,8 @@ export default class contextApi {
             return undefined;
         });
 
+        const statistics = response.data.statistics as StatisticsDto;
         return new SpendContext(response.data.types, response.data.subTypes, response.data.directions, 
-            response.data.defaultType, response.data.defaultSubType, response.data.defaultDirection);
+            response.data.defaultType, response.data.defaultSubType, response.data.defaultDirection, statistics);
     }
 }

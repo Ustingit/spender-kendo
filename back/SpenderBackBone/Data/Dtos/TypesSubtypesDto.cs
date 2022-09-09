@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SpenderBackBone.Data.Entities.Spends.Statistics;
 
 namespace SpenderBackBone.Data.Dtos
 {
@@ -21,5 +22,8 @@ namespace SpenderBackBone.Data.Dtos
 
 		[JsonProperty("defaultDirection")]
 		public int DefaultDirection { get; set; }
+
+		[JsonProperty("statistics")]
+		public StatisticsDto Statistics { get; set; }
 	}
 }
