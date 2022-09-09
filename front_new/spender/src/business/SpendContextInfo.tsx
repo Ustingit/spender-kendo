@@ -25,6 +25,7 @@ export default class SpendContext {
     }
 
     getSubTypesByType(type: number, selectedSubType: number | null = null) : IdTextPairWithParent[] {
+        debugger
         var result = this.subTypes.filter(st => st.parent == type) || [];
 
         if (selectedSubType !== null) {

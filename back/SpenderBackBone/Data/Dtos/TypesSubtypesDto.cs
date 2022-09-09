@@ -1,5 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace SpenderBackBone.Data.Dtos
 {
@@ -13,5 +12,14 @@ namespace SpenderBackBone.Data.Dtos
 
 		[JsonProperty("directions")]
 		public IdTextPair[] Directions { get; set; }
+
+		[JsonProperty("defaultType")]
+		public int DefaultType { get; set; }
+
+		[JsonProperty("defaultSubType")]
+		public int? DefaultSubType { get; set; }
+
+		[JsonProperty("defaultDirection")]
+		public int DefaultDirection { get; set; }
 	}
 }

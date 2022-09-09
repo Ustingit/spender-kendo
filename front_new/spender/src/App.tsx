@@ -24,7 +24,8 @@ import contextApi from './api/spendsContextApi';
 // +grouping by date
 // +waiter for data spinner
 // pages (react-router)
-// all the selectors for types\subtypes\etc
+// +all the selectors for types\subtypes\etc
+// add total sum to the page
 
 const emptyContext = new SpendContext([], [], [], 0, null, 0);
 

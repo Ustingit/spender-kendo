@@ -27,34 +27,46 @@ interface Props {
 
 export default function EditSpendModal(props: Props) {
     const spendToEdit = props.item;
+    
+    const initialDirection = spendToEdit.direction;
+    const initialType = spendToEdit.typeId;
+    const initialSubType = spendToEdit.subType;
+    const initialDirections = props.context.getDirectionsWithSelected(spendToEdit.direction);
+    const initialTypes = props.context.getTypesByDirection(spendToEdit.direction, spendToEdit.typeId);
+    const initialSubTypes = props.context.getSubTypesByType(spendToEdit.typeId, spendToEdit.subType);
+    const initialComment = spendToEdit.comment || '';
 
-    const [editableDirection, setEditableDirection] = useState<number>(spendToEdit.direction);
-    const [editableType, setEditableType] = useState<number>(spendToEdit.typeId);
-    const [editableSubType, setEditableSubType] = useState<number | null>(spendToEdit.subType);
-    const [spendDirections, setSpendDirections] = useState<IdTextPair[]>(props.context.getDirectionsWithSelected(spendToEdit.direction));
-    const [spendTypes, setSpendTypes] = useState<SpendType[]>(props.context.getTypesByDirection(spendToEdit.direction, spendToEdit.typeId));
-    const [spendSubTypes, setSubSpendTypes] = useState<IdTextPair[]>(props.context.getSubTypesByType(spendToEdit.typeId, spendToEdit.subType));
+    const [editableDirection, setEditableDirection] = useState<number>(initialDirection);
+    const [editableType, setEditableType] = useState<number>(initialType);
+    const [editableSubType, setEditableSubType] = useState<number | null>(initialSubType);
+    const [spendDirections, setSpendDirections] = useState<IdTextPair[]>(initialDirections);
+    const [spendTypes, setSpendTypes] = useState<SpendType[]>(initialTypes);
+    const [spendSubTypes, setSubSpendTypes] = useState<IdTextPair[]>(initialSubTypes);
     
     const [editableAmount, setEditableAmount] = useState<number>(spendToEdit.amount);
     const [editableIsFrequent, setEditableIsFrequent] = useState(spendToEdit.isFrequent);
-    const [editableComment, setEditableComment] = useState<string>(spendToEdit.comment || '');
+    const [editableComment, setEditableComment] = useState<string>(initialComment);
     
     const [dateLanded, setDateLanded] = React.useState<Date>(
       dateFns.parse(formatAsCommon(spendToEdit.date), "MM/dd/yyyy", new Date())
     );
 
     useEffect(() => {
-      var matchedTypes = props.context.getTypesByDirection(editableDirection);
-      var type = matchedTypes.length > 0 ? matchedTypes[0].id : props.context.defaultType;
-      setSpendTypes(matchedTypes);
-      setEditableType(type);
+        if (initialDirection !== editableDirection) {
+          var matchedTypes = props.context.getTypesByDirection(editableDirection);
+          var type = matchedTypes.length > 0 ? matchedTypes[0].id : props.context.defaultType;
+          setSpendTypes(matchedTypes);
+          setEditableType(type);
+        }
     }, [editableDirection]);
 
     useEffect(() => {
-      var matchedSubTypes = props.context.getSubTypesByType(editableType);
-      setSubSpendTypes(matchedSubTypes);
-      if (matchedSubTypes.length > 0) {
-        setEditableSubType(matchedSubTypes[0].id);
+      if (initialType !== editableType) {
+        var matchedSubTypes = props.context.getSubTypesByType(editableType);
+        setSubSpendTypes(matchedSubTypes);
+        if (matchedSubTypes.length > 0) {
+          setEditableSubType(matchedSubTypes[0].id);
+        }
       }
     }, [editableType]);
     
@@ -71,10 +83,6 @@ export default function EditSpendModal(props: Props) {
         direction: editableDirection,
         rawDate: formatAsCommon(dateLanded)
       } as ISpent);
-    }
-
-    if (!props.item || !props.context) {
-      return <></>;
     }
 
     return (

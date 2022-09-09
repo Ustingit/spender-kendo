@@ -63,8 +63,8 @@ namespace SpenderBackBone.Controllers
 				UserId = 1,
                 Comment = newSpent.Comment,
                 Amount = newSpent.Amount,
-                TypeId = 1,
-                SubTypeId = 1,
+                TypeId = newSpent.TypeId,
+                SubTypeId = newSpent.SubType,
 				Currency = CurrencyHelper.GetCurrencyBySign(newSpent.CurrencySign),
 				Direction = (Direction) newSpent.Direction
             };
